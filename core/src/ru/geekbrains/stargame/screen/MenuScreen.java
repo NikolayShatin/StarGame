@@ -6,65 +6,47 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.stargame.base.BaseScreen;
+import ru.geekbrains.stargame.math.Rect;
+import ru.geekbrains.stargame.sprites.Background;
 
 public class MenuScreen extends BaseScreen {
 
-    private static final float V_LEN = 0.9f;
-    private Texture img;
+    private static final float V_LEN = 0.05f; // зададим длину вектора скорости константой
+    private Texture bg;
     private Vector2 pos;
-    private Vector2 v;
-    private Vector2 n;
-    private Vector2 sub;
-    private Vector2 tmp;
+    private Background background;
+
 
     @Override
     public void show() {
         super.show();
-        img = new Texture("tiger.jpg");
+        bg = new Texture("textures/bg.png");
+        background = new Background(bg);
         pos = new Vector2();
-        v = new Vector2();
-        //n = new Vector2(0,-0.01f);
-        sub = new Vector2();
-        tmp = new Vector2();
+    }
 
+
+    @Override
+    public void resize(Rect worldBounds) {
+       background.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        batch.draw(img, pos.x, pos.y);
+        background.draw(batch); // background уже сам знает как себя нарисовать
         batch.end();
-        tmp.set(sub);
-        if (tmp.sub(pos).len() > V_LEN){
-            pos.add(v);
-        } else {
-            pos.set(sub);
-        }
-
-
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        img.dispose();
+        bg.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        sub.set(screenX, Gdx.graphics.getHeight() - screenY);
-        v.set(sub.cpy().sub(pos)).setLength(V_LEN);
-        //sub = pos.sub(pos.set(screenX, Gdx.graphics.getHeight() - screenY));
-        //v.set(2,1);
-        //n.set(0,-0.01f);
-        return false;
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        return super.touchDown(touch, pointer, button);
     }
-
-//    @Override
-//    public boolean touchDragged(int screenX, int screenY, int pointer) {
-//        pos.set(screenX, Gdx.graphics.getHeight() - screenY);
-//
-//        return super.touchDragged(screenX, screenY, pointer);
-//    }
 }
