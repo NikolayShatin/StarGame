@@ -83,5 +83,8 @@ public void resize (Rect worldBounds){
         setWidth(height*aspect);
     }
 
+    public void update(float delta) {
+
+    }
 
 }

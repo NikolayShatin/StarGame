@@ -8,13 +8,16 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.base.BaseScreen;
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.sprites.Background;
+import ru.geekbrains.stargame.sprites.Logo;
 
 public class MenuScreen extends BaseScreen {
 
     private static final float V_LEN = 0.05f; // зададим длину вектора скорости константой
     private Texture bg;
-    private Vector2 pos;
     private Background background;
+
+    private Texture img;
+    private Logo logo;
 
 
     @Override
@@ -22,31 +25,47 @@ public class MenuScreen extends BaseScreen {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
-        pos = new Vector2();
+        img = new Texture("badlogic.jpg");
+        logo = new Logo(img);
     }
 
 
     @Override
     public void resize(Rect worldBounds) {
-       background.resize(worldBounds);
+        background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        batch.begin();
-        background.draw(batch); // background уже сам знает как себя нарисовать
-        batch.end();
+        update(delta);
+        draw();
     }
 
     @Override
     public void dispose() {
         super.dispose();
         bg.dispose();
+        img.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        return super.touchDown(touch, pointer, button);
+        logo.touchDown(touch, pointer, button);
+        return false;
     }
+
+    private void update(float delta) {
+        logo.update(delta);
+    }
+
+    private void draw() {
+        batch.begin();
+        background.draw(batch); // background уже сам знает как себя нарисовать
+        logo.draw(batch);
+        batch.end();
+    }
+
+
 }
