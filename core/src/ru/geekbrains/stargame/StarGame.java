@@ -10,7 +10,7 @@ public class StarGame extends Game {
 
     @Override
     public void create() {
-        setScreen(new MenuScreen()); //чтобы установить MenuScreen как первоначальный экран
+        setScreen(new MenuScreen(this)); //чтобы установить MenuScreen как первоначальный экран
     }
 
 }
