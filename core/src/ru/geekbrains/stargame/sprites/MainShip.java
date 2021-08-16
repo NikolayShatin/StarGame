@@ -33,6 +33,23 @@ public class MainShip extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+//        if (getRight() > worldBounds.getRight()){// если корабль высунулся за правый край экрана
+//            setRight(worldBounds.getRight());//выравниваем его
+//            stop(); // и останавливаем
+//        }
+//        if (getLeft()< worldBounds.getLeft()){
+//            setLeft(worldBounds.getLeft());
+//            stop();
+//        }
+
+        if (getLeft() > worldBounds.getRight()){// проверим, что корабль полностью ушел за экран
+            setRight(worldBounds.getLeft());
+        }
+
+        if (getRight()< worldBounds.getLeft()){
+            setLeft(worldBounds.getRight());
+        }
+
     }
 
     @Override
