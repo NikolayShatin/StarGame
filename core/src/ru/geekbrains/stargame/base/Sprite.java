@@ -20,6 +20,11 @@ public class Sprite extends Rect {
         regions[0] = region; // в который положим TextureRegion
     }
 
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        regions = ru.gb.utils.Regions.split(region, rows, cols, frames);
+    }
+
+
 
     //сейчас в метод drow мы передавали много параметров и настраивали все в ручную.
     // Мы же хотим в классе MenuScreen просто передавать события, а логика отрисовки пусть
