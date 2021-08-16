@@ -14,11 +14,20 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions; // для анимации состоящей из нескольких текстур
     protected int frame;// указывает на текущий элемент в TextureRegion
 
+    private boolean destroyed; // флаг, помечающий спрайт на удаление
+
+    public Sprite() {
+    }
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1]; // иициализируем единичный массив
         regions[0] = region; // в который положим TextureRegion
     }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        regions = ru.gb.utils.Regions.split(region, rows, cols, frames);
+    }
+
 
 
     //сейчас в метод drow мы передавали много параметров и настраивали все в ручную.
@@ -85,6 +94,20 @@ public void resize (Rect worldBounds){
 
     public void update(float delta) {
 
+    }
+
+
+    public void destroy() { // метод, который выставляет флаг в true
+        destroyed = true;
+    }
+
+
+    public void flushDestroy(){ //сбрасывает флаг для возможности переиспользования
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() { // для получения текущего состояния объекта
+        return destroyed;
     }
 
 }
