@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.stargame.base.Sprite;
 import ru.geekbrains.stargame.math.Rect;
+import ru.geekbrains.stargame.pool.BulletPull;
 
 public class MainShip extends Sprite {
 
@@ -23,10 +24,22 @@ public class MainShip extends Sprite {
     private int rightPointer = INVALID_POINTER;
 
     private Rect worldBounds;
+    private BulletPull bulletPool;
+    private TextureRegion bulletRegion;
+    private Vector2 bulletV; //вектор скорости пули
+    private float bulletHeight; // размер пули
+    private int bulletDamage;
+    private Vector2 bulletPosition; // чтобы вылетало из носа коробля
 
 
-    public MainShip(TextureAtlas atlas) {
+    public MainShip(TextureAtlas atlas, BulletPull bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletPool = bulletPool;
+        bulletRegion = atlas.findRegion("bulletMainShip");
+        bulletV = new Vector2(0, 0.5f);
+        bulletHeight = 0.01f;
+        bulletDamage = 1;
+        bulletPosition = new Vector2();
     }
 
     @Override
@@ -137,6 +150,9 @@ public class MainShip extends Sprite {
                     stop();
                 }
                 break;
+            case Input.Keys.UP:
+                shoot();
+                break;
         }
 
         return false;
@@ -153,6 +169,13 @@ public class MainShip extends Sprite {
 
     private void stop() {
         v.setZero();
+    }
+
+    private void shoot() { // метод стрельбы
+        Bullet bullet = bulletPool.obtain();
+        bulletPosition.set(pos.x, pos.y + getHalfHeight());
+        bullet.set(this, bulletRegion, this.pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+
     }
 
 
