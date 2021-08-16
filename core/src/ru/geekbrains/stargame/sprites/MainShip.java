@@ -1,6 +1,7 @@
 package ru.geekbrains.stargame.sprites;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -32,20 +33,37 @@ public class MainShip extends Sprite {
     private Vector2 bulletPosition; // чтобы вылетало из носа коробля
 
 
-    public MainShip(TextureAtlas atlas, BulletPull bulletPool) {
+    private float reloadInterval;
+    private float reloadTimer;
+    private static final float RELOAD_INTERVAL = 0.2f;
+
+    private Sound bulletSound;
+
+
+    public MainShip(TextureAtlas atlas, BulletPull bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.bulletSound = bulletSound;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         bulletHeight = 0.01f;
         bulletDamage = 1;
+        reloadInterval = RELOAD_INTERVAL;
         bulletPosition = new Vector2();
+
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        reloadTimer += delta;
+        if (reloadTimer >= RELOAD_INTERVAL) {
+            reloadTimer = 0f;
+            shoot();
+        }
+
+
 //        if (getRight() > worldBounds.getRight()){// если корабль высунулся за правый край экрана
 //            setRight(worldBounds.getRight());//выравниваем его
 //            stop(); // и останавливаем
@@ -55,11 +73,11 @@ public class MainShip extends Sprite {
 //            stop();
 //        }
 
-        if (getLeft() > worldBounds.getRight()){// проверим, что корабль полностью ушел за экран
+        if (getLeft() > worldBounds.getRight()) {// проверим, что корабль полностью ушел за экран
             setRight(worldBounds.getLeft());
         }
 
-        if (getRight()< worldBounds.getLeft()){
+        if (getRight() < worldBounds.getLeft()) {
             setLeft(worldBounds.getRight());
         }
 
@@ -150,9 +168,7 @@ public class MainShip extends Sprite {
                     stop();
                 }
                 break;
-            case Input.Keys.UP:
-                shoot();
-                break;
+
         }
 
         return false;
@@ -175,7 +191,7 @@ public class MainShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPosition.set(pos.x, pos.y + getHalfHeight());
         bullet.set(this, bulletRegion, this.pos, bulletV, bulletHeight, worldBounds, bulletDamage);
-
+        bulletSound.play();
     }
 
 

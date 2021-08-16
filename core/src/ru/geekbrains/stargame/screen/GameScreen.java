@@ -1,5 +1,8 @@
 package ru.geekbrains.stargame.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +25,9 @@ public class GameScreen extends BaseScreen {
 
     private BulletPull bulletPull;
 
+    private Music music;
+    private Sound laserSound;
+
 
     @Override
     public void show() {
@@ -34,7 +40,12 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPull = new BulletPull();
-        mainShip = new MainShip(atlas, bulletPull);
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        mainShip = new MainShip(atlas, bulletPull, laserSound);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -61,6 +72,8 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPull.dispose();
+        music.dispose();
+        laserSound.dispose();
     }
 
     @Override
