@@ -6,16 +6,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.stargame.base.Sprite;
+import ru.geekbrains.stargame.base.Ship;
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.pool.BulletPull;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
     private static final float HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
-    private final Vector2 v0 = new Vector2(0.5f, 0);
-    private final Vector2 v = new Vector2();
+//    private final Vector2 v0 = new Vector2(0.5f, 0);
+//    private final Vector2 v = new Vector2();
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -24,17 +24,7 @@ public class MainShip extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private Rect worldBounds;
-    private BulletPull bulletPool;
-    private TextureRegion bulletRegion;
-    private Vector2 bulletV; //вектор скорости пули
-    private float bulletHeight; // размер пули
-    private int bulletDamage;
-    private Vector2 bulletPosition; // чтобы вылетало из носа коробля
 
-
-    private float reloadInterval;
-    private float reloadTimer;
     private static final float RELOAD_INTERVAL = 0.2f;
 
     private Sound bulletSound;
@@ -50,7 +40,7 @@ public class MainShip extends Sprite {
         bulletDamage = 1;
         reloadInterval = RELOAD_INTERVAL;
         bulletPosition = new Vector2();
-
+        v0.set(0.5f, 0);
     }
 
     @Override
@@ -168,7 +158,9 @@ public class MainShip extends Sprite {
                     stop();
                 }
                 break;
-
+//            case Input.Keys.UP:
+//                shoot();
+//                break;
         }
 
         return false;
@@ -190,7 +182,7 @@ public class MainShip extends Sprite {
     private void shoot() { // метод стрельбы
         Bullet bullet = bulletPool.obtain();
         bulletPosition.set(pos.x, pos.y + getHalfHeight());
-        bullet.set(this, bulletRegion, this.pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+        bullet.set(this, bulletRegion, bulletPosition, bulletV, bulletHeight, worldBounds, bulletDamage);
         bulletSound.play();
     }
 
