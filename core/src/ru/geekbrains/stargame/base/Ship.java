@@ -21,10 +21,10 @@ public abstract class Ship extends Sprite {
     protected BulletPool bulletPool;
     protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
+    protected Vector2 bulletPos; // чтобы вылетало из носа коробля
     protected Vector2 bulletV; //вектор скорости пули
     protected float bulletHeight; // размер пули
     protected int bulletDamage;
-    protected Vector2 bulletPos; // чтобы вылетало из носа коробля
     protected Sound bulletSound;
     protected int hp;
 
@@ -37,17 +37,16 @@ public abstract class Ship extends Sprite {
 
 
     public Ship() {
-        v = new Vector2();
         v0 = new Vector2();
+        v = new Vector2();
         bulletPos = new Vector2();
         bulletV = new Vector2();
     }
 
-
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
-        v = new Vector2();
         v0 = new Vector2();
+        v = new Vector2();
         bulletPos = new Vector2();
         bulletV = new Vector2();
     }
@@ -65,7 +64,6 @@ public abstract class Ship extends Sprite {
         if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
             frame = 0;
         }
-
     }
 
     public void damage(int damage) {
@@ -90,8 +88,7 @@ public abstract class Ship extends Sprite {
         boom();
     }
 
-
-    private void shoot() { // метод стрельбы
+    private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
         bulletSound.play();
