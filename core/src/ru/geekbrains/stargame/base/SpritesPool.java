@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SpritePool<T extends Sprite> { // принимает только наследников Sprite
+public abstract class SpritesPool<T extends Sprite> { // принимает только наследников Sprite
 
     protected final List<T> activeSprites = new ArrayList<>(); // динамический массив активных объектов
     protected final List<T> freeSprites = new ArrayList<>(); // динамический массив свободных объектов

@@ -7,19 +7,22 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.base.Ship;
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.pool.BulletPool;
+import ru.geekbrains.stargame.pool.ExplosionPool;
 
 
 public class EnemyShip extends Ship {
 
-    public EnemyShip(Rect worldBounds, BulletPool bulletPool) {
+    public EnemyShip(Rect worldBounds, BulletPool bulletPool, ExplosionPool explosionPool) {
         super();
         this.worldBounds = worldBounds;
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
+        bulletPos.set(pos.x, pos.y - getHalfHeight());
         if (getTop() < worldBounds.getTop()) {
             v.set(v0);
         } else {
@@ -28,7 +31,7 @@ public class EnemyShip extends Ship {
         if (getBottom() < worldBounds.getBottom()) {// если пересечет нижнюю часть экрана
             destroy();
         }
-        bulletPos.set(pos.x, pos.y - getHalfHeight());
+
     }
 
     public void set(
@@ -54,8 +57,14 @@ public class EnemyShip extends Ship {
         setHeightProportion(height);
         this.hp = hp;
         v.set(0, -0.4f);
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
     }
+
+    public void setPos(float x, float y) {
+        pos.set(x, y);
+        bulletPos.set(pos.x, pos.y - getHalfHeight());
+    }
+
+
 
     @Override
     public boolean isBulletCollision(Bullet bullet) {
@@ -72,7 +81,6 @@ public class EnemyShip extends Ship {
         super.destroy();
         reloadTimer = 0f;
     }
-
 
 
 }

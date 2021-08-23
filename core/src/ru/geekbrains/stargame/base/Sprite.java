@@ -29,7 +29,6 @@ public class Sprite extends Rect {
     }
 
 
-
     //сейчас в метод drow мы передавали много параметров и настраивали все в ручную.
     // Мы же хотим в классе MenuScreen просто передавать события, а логика отрисовки пусть
     // будет в спрайте. Поэтому в draw передаем только батчер.
@@ -48,9 +47,9 @@ public class Sprite extends Rect {
 
     //дополнительные методы спарайта, для передачи различных событий
 
-public void resize (Rect worldBounds){
+    public void resize(Rect worldBounds) {
 
-}
+    }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         return false;
@@ -86,10 +85,10 @@ public void resize (Rect worldBounds){
     // мы спрайту будем задавать только высоту, а ширина будет считаться автоматически
 
 
-    public void setHeightProportion(float height){
+    public void setHeightProportion(float height) {
         setHeight(height);
-        float aspect = regions[frame].getRegionWidth()/(float)regions[frame].getRegionHeight();
-        setWidth(height*aspect);
+        float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
+        setWidth(height * aspect);
     }
 
     public void update(float delta) {
@@ -102,7 +101,7 @@ public void resize (Rect worldBounds){
     }
 
 
-    public void flushDestroy(){ //сбрасывает флаг для возможности переиспользования
+    public void flushDestroy() { //сбрасывает флаг для возможности переиспользования
         destroyed = false;
     }
 

@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.pool.BulletPool;
+import ru.geekbrains.stargame.pool.ExplosionPool;
 import ru.geekbrains.stargame.sprites.Bullet;
+import ru.geekbrains.stargame.sprites.Explosion;
 
 public abstract class Ship extends Sprite {
 
@@ -17,6 +19,7 @@ public abstract class Ship extends Sprite {
 
     protected Rect worldBounds;
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
     protected Vector2 bulletV; //вектор скорости пули
     protected float bulletHeight; // размер пули
@@ -33,9 +36,9 @@ public abstract class Ship extends Sprite {
     private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
 
 
-    public Ship(){
+    public Ship() {
         v = new Vector2();
-        v0= new Vector2();
+        v0 = new Vector2();
         bulletPos = new Vector2();
         bulletV = new Vector2();
     }
@@ -44,7 +47,7 @@ public abstract class Ship extends Sprite {
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
         v = new Vector2();
-        v0= new Vector2();
+        v0 = new Vector2();
         bulletPos = new Vector2();
         bulletV = new Vector2();
     }
@@ -57,7 +60,11 @@ public abstract class Ship extends Sprite {
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
-    }
+        }
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
 
     }
 
@@ -80,10 +87,8 @@ public abstract class Ship extends Sprite {
     @Override
     public void destroy() {
         super.destroy();
-        //boom();
+        boom();
     }
-
-
 
 
     private void shoot() { // метод стрельбы
@@ -92,9 +97,9 @@ public abstract class Ship extends Sprite {
         bulletSound.play();
     }
 
-//    private void boom() {
-//        Explosion explosion = explosionPool.obtain();
-//        explosion.set(pos, getHeight());
-//    }
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(pos, getHeight());
+    }
 
 }

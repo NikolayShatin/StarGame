@@ -34,9 +34,8 @@ public class MainShip extends Ship {
         bulletHeight = 0.01f;
         bulletDamage = 1;
         reloadInterval = RELOAD_INTERVAL;
-        bulletPos = new Vector2();
         v0.set(0.5f, 0);
-        hp = 100;
+        hp = 1;
     }
 
     @Override
@@ -142,9 +141,6 @@ public class MainShip extends Ship {
                     stop();
                 }
                 break;
-//            case Input.Keys.UP:
-//                shoot();
-//                break;
         }
 
         return false;

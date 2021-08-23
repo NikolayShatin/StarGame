@@ -13,6 +13,7 @@ import ru.geekbrains.stargame.base.BaseScreen;
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.pool.BulletPool;
 import ru.geekbrains.stargame.pool.EnemyPool;
+import ru.geekbrains.stargame.pool.ExplosionPool;
 import ru.geekbrains.stargame.sprites.Background;
 import ru.geekbrains.stargame.sprites.Bullet;
 import ru.geekbrains.stargame.sprites.EnemyShip;
@@ -22,19 +23,26 @@ import ru.geekbrains.stargame.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
 
+    private static final int STAR_COUNT = 64;
+
     private Texture bg;
     private Background background;
-    private TextureAtlas atlas;
-    private Star[] stars;
-    private static final int STAR_COUNT = 64;
-    private MainShip mainShip;
 
+    private TextureAtlas atlas;
+
+
+
+
+    private MainShip mainShip;
+    private Star[] stars;
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
+    private ExplosionPool explosionPool;
 
     private Sound bulletSound;
     private Music music;
     private Sound laserSound;
+    private Sound explosionSound;
 
     private EnemyEmitter enemyEmitter;
 
@@ -45,17 +53,22 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
+
         bulletPool = new BulletPool();
+        explosionPool = new ExplosionPool(atlas, explosionSound);
         enemyPool = new EnemyPool(worldBounds, bulletPool);
-        laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         mainShip = new MainShip(atlas, bulletPool, laserSound);
 
-        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         enemyEmitter = new EnemyEmitter(worldBounds, bulletSound, enemyPool, atlas);
+
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
@@ -87,10 +100,12 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        explosionPool.dispose();
         enemyPool.dispose();
         music.dispose();
         laserSound.dispose();
         bulletSound.dispose();
+        explosionSound.dispose();
     }
 
     @Override
@@ -122,10 +137,13 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        mainShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generate(delta);
+        explosionPool.updateActiveSprites(delta);
+        if (!mainShip.isDestroyed()) {
+            mainShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyPool.updateActiveSprites(delta);
+            enemyEmitter.generate(delta);
+        }
     }
 
     private void draw() {
@@ -134,9 +152,12 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-        mainShip.draw(batch);
-        bulletPool.drawActiveSprites(batch);
-        enemyPool.drawActiveSprites(batch);
+        if (!mainShip.isDestroyed()) {
+            mainShip.draw(batch);
+            bulletPool.drawActiveSprites(batch);
+            enemyPool.drawActiveSprites(batch);
+        }
+        explosionPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -144,6 +165,7 @@ public class GameScreen extends BaseScreen {
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveSprites();
         enemyPool.freeAllDestroyedActiveSprites();
+        explosionPool.freeAllDestroyedActiveSprites();
     }
 
 

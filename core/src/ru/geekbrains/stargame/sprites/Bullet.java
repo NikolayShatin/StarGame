@@ -10,13 +10,13 @@ public class Bullet extends Sprite {
 
     private Rect worldBounds; // границы игрового мира
     private Vector2 v;
-    private  int damage; // урон,который наносит пуля
+    private int damage; // урон,который наносит пуля
     private Sprite owner; // владелец пули
 
     public Bullet() {
         regions = new TextureRegion[1]; // проинициализируем массив регионов, но текстуру пули
         // мы не знаем (есть наша, есть вражеская). Текстуру будем присваивать
-        // когда будем лдоставать пулю из пула объектов
+        // когда будем доставать пулю из пула объектов
 
         v = new Vector2();
     }
