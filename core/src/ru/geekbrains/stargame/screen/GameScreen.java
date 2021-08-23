@@ -9,7 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.stargame.base.BaseScreen;
 import ru.geekbrains.stargame.math.Rect;
-import ru.geekbrains.stargame.pool.BulletPull;
+import ru.geekbrains.stargame.pool.BulletPool;
+import ru.geekbrains.stargame.pool.EnemyPool;
 import ru.geekbrains.stargame.sprites.Background;
 import ru.geekbrains.stargame.sprites.MainShip;
 import ru.geekbrains.stargame.sprites.Star;
@@ -23,7 +24,8 @@ public class GameScreen extends BaseScreen {
     private static final int STAR_COUNT = 64;
     private MainShip mainShip;
 
-    private BulletPull bulletPull;
+    private BulletPool bulletPool;
+    private EnemyPool enemyPool;
 
     private Music music;
     private Sound laserSound;
@@ -39,9 +41,10 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-        bulletPull = new BulletPull();
+        bulletPool = new BulletPool();
+        enemyPool = new EnemyPool(worldBounds, bulletPool);
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        mainShip = new MainShip(atlas, bulletPull, laserSound);
+        mainShip = new MainShip(atlas, bulletPool, laserSound);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
@@ -71,7 +74,8 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
-        bulletPull.dispose();
+        bulletPool.dispose();
+        enemyPool.dispose();
         music.dispose();
         laserSound.dispose();
     }
@@ -106,7 +110,8 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         mainShip.update(delta);
-        bulletPull.updateActiveSprites(delta);
+        bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
     }
 
     private void draw() {
@@ -116,13 +121,15 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         mainShip.draw(batch);
-        bulletPull.drawActiveSprites(batch);
+        bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 
 
     private void freeAllDestroyed() {
-        bulletPull.freeAllDestroyedActiveSprites();
+        bulletPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
 }
