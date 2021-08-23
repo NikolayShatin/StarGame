@@ -9,10 +9,12 @@ import ru.geekbrains.stargame.math.Rect;
 public class GameOver extends Sprite {
 
     public static final float HEIGHT = 0.08f;
+    public static final float BOTTOM_MARGIN = 0.009f;
 
     @Override
     public void resize(Rect worldBounds) {
         setHeightProportion(HEIGHT);
+        setBottom(BOTTOM_MARGIN);
     }
 
     public GameOver(TextureAtlas atlas) {

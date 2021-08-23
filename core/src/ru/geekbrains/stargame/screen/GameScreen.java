@@ -19,6 +19,7 @@ import ru.geekbrains.stargame.sprites.Bullet;
 import ru.geekbrains.stargame.sprites.EnemyShip;
 import ru.geekbrains.stargame.sprites.GameOver;
 import ru.geekbrains.stargame.sprites.MainShip;
+import ru.geekbrains.stargame.sprites.NewGameButton;
 import ru.geekbrains.stargame.sprites.Star;
 import ru.geekbrains.stargame.utils.EnemyEmitter;
 
@@ -45,6 +46,7 @@ public class GameScreen extends BaseScreen {
     private EnemyEmitter enemyEmitter;
 
     private GameOver gameOver;
+    private NewGameButton newGameButton;
 
 
     @Override
@@ -69,11 +71,20 @@ public class GameScreen extends BaseScreen {
         enemyEmitter = new EnemyEmitter(worldBounds, bulletSound, enemyPool, atlas);
 
         gameOver = new GameOver(atlas);
+        newGameButton = new NewGameButton(atlas, this);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
     }
+
+    public void startNewGame() {
+        mainShip.startNewGame();
+        bulletPool.freeAllActiveSprites();
+        enemyPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
+    }
+
 
     @Override
     public void render(float delta) {
@@ -93,6 +104,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.resize(worldBounds);
         gameOver.resize(worldBounds);
+        newGameButton.resize(worldBounds);
     }
 
     @Override
@@ -111,13 +123,25 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        mainShip.touchDown(touch, pointer, button);
+        if (mainShip.isDestroyed()) {
+            newGameButton.touchDown(touch, pointer, button);
+        } else {
+            mainShip.touchDown(touch, pointer, button);
+        }
+
+
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        mainShip.touchUp(touch, pointer, button);
+        if (mainShip.isDestroyed()) {
+            newGameButton.touchUp(touch, pointer, button);
+        } else {
+            mainShip.touchUp(touch, pointer, button);
+        }
+
+
         return false;
     }
 
@@ -159,6 +183,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         } else {
             gameOver.draw(batch);
+            newGameButton.draw(batch);
         }
 
         explosionPool.drawActiveSprites(batch);
@@ -173,7 +198,7 @@ public class GameScreen extends BaseScreen {
     }
 
 
-    private void checkCollisions(){
+    private void checkCollisions() {
         if (mainShip.isDestroyed()) {
             return;
         }

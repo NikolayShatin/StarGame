@@ -12,6 +12,9 @@ import ru.geekbrains.stargame.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
+
+    private static final int HP = 100;
+
     private static final float HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
@@ -22,8 +25,6 @@ public class MainShip extends Ship {
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
-
-
 
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletSound) {
@@ -37,20 +38,32 @@ public class MainShip extends Ship {
         bulletDamage = 1;
         reloadInterval = RELOAD_INTERVAL;
         v0.set(0.5f, 0);
-        hp = 1;
+        hp = HP;
     }
+
+    public void startNewGame() {
+        hp = HP;
+
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        stop();
+        this.pos.x = worldBounds.pos.x;
+        flushDestroy();
+    }
+
 
     @Override
     public void update(float delta) {
         super.update(delta);
 
 
-
-        if (getRight() > worldBounds.getRight()){// если корабль высунулся за правый край экрана
+        if (getRight() > worldBounds.getRight()) {// если корабль высунулся за правый край экрана
             setRight(worldBounds.getRight());//выравниваем его
             stop(); // и останавливаем
         }
-        if (getLeft()< worldBounds.getLeft()){
+        if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
         }
@@ -157,8 +170,6 @@ public class MainShip extends Ship {
                         || bullet.getTop() < getBottom()
         );
     }
-
-
 
 
     private void moveRight() {

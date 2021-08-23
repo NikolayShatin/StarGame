@@ -20,7 +20,7 @@ public abstract class SpritesPool<T extends Sprite> { // принимает то
             sprite = freeSprites.remove(freeSprites.size() - 1); // достаем существующий спрайт
         }
         activeSprites.add(sprite); // помещаем этот спрайт в массив активных объектов
-        System.out.println(getClass().getName()+" active/free : " + activeSprites.size() + "/" + freeSprites.size());
+        System.out.println(getClass().getName() + " active/free : " + activeSprites.size() + "/" + freeSprites.size());
         return sprite;
     }
 
@@ -43,7 +43,7 @@ public abstract class SpritesPool<T extends Sprite> { // принимает то
     private void free(T sprite) { // метод удаления
         if (activeSprites.remove(sprite)) {// если успешно удалили объект из списка активных объектов
             freeSprites.add(sprite);
-            System.out.println(getClass().getName()+" active/free : " + activeSprites.size() + "/" + freeSprites.size());
+            System.out.println(getClass().getName() + " active/free : " + activeSprites.size() + "/" + freeSprites.size());
         }
     }
 
@@ -62,6 +62,11 @@ public abstract class SpritesPool<T extends Sprite> { // принимает то
     public void dispose() { // очистка объектов
         activeSprites.clear();
         freeSprites.clear();
+    }
+
+    public void freeAllActiveSprites() {
+        freeSprites.addAll(activeSprites);
+        activeSprites.clear();
     }
 
 
