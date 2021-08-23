@@ -8,7 +8,9 @@ import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.pool.BulletPool;
 import ru.geekbrains.stargame.sprites.Bullet;
 
-public class Ship extends Sprite {
+public abstract class Ship extends Sprite {
+
+    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
 
     protected final Vector2 v0;
     protected final Vector2 v;
@@ -26,6 +28,9 @@ public class Ship extends Sprite {
 
     protected float reloadInterval;
     protected float reloadTimer;
+
+
+    private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
 
 
     public Ship(){
@@ -56,11 +61,40 @@ public class Ship extends Sprite {
 
     }
 
+    public void damage(int damage) {
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
+        frame = 1;
+        damageAnimateTimer = 0f;
+    }
+
+    public abstract boolean isBulletCollision(Bullet bullet);
+
+    public int getBulletDamage() {
+        return bulletDamage;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        //boom();
+    }
+
+
+
 
     private void shoot() { // метод стрельбы
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
         bulletSound.play();
     }
+
+//    private void boom() {
+//        Explosion explosion = explosionPool.obtain();
+//        explosion.set(pos, getHeight());
+//    }
 
 }

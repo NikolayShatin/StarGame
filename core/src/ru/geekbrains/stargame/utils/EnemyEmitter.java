@@ -63,12 +63,12 @@ public class EnemyEmitter {
             enemyBigRegions = ru.gb.utils.Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
         }
 
-        public void generate(float delta) {
+        public void generate(float delta) { // метод генерации вражеских кораблей
             generateTimer += delta;
             if (generateTimer >= GENERATE_INTERVAL) {
                 generateTimer = 0f;
-                EnemyShip enemy = enemyPool.obtain();
-                float type = (float) Math.random();
+                EnemyShip enemy = enemyPool.obtain(); // создаем новый корабль
+                float type = (float) Math.random(); // выбор типа корабля
                 if (type < 0.5f) {
                     enemy.set(
                             enemySmallRegions,
