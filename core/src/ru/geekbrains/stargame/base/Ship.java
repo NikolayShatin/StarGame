@@ -99,4 +99,7 @@ public abstract class Ship extends Sprite {
         explosion.set(pos, getHeight());
     }
 
+    public int getHp() {
+        return hp;
+    }
 }

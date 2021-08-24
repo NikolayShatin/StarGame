@@ -43,7 +43,6 @@ public class MainShip extends Ship {
 
     public void startNewGame() {
         hp = HP;
-
         pressedLeft = false;
         pressedRight = false;
         leftPointer = INVALID_POINTER;

@@ -13,25 +13,25 @@ import ru.geekbrains.stargame.sprites.EnemyShip;
 public class EnemyEmitter {
 
 
-        private static final float GENERATE_INTERVAL = 4f;
-// данные для вражеского корабля Тип1
-        private static final float ENEMY_SMALL_HEIGHT = 0.1f; // размер врага
-        private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f; // размер пули
-        private static final int ENEMY_SMALL_BULLET_DAMAGE = 1; //урон пули
-        private static final float ENEMY_SMALL_RELOAD_INTERVAL = 3f; //
-        private static final int ENEMY_SMALL_HP = 1; // количество жизней
+    private static final float GENERATE_INTERVAL = 4f;
+    // данные для вражеского корабля Тип1
+    private static final float ENEMY_SMALL_HEIGHT = 0.1f; // размер врага
+    private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f; // размер пули
+    private static final int ENEMY_SMALL_BULLET_DAMAGE = 1; //урон пули
+    private static final float ENEMY_SMALL_RELOAD_INTERVAL = 3f; //
+    private static final int ENEMY_SMALL_HP = 1; // количество жизней
     // данные для вражеского корабля Тип2
-        private static final float ENEMY_MEDIUM_HEIGHT = 0.15f;
-        private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.02f;
-        private static final int ENEMY_MEDIUM_BULLET_DAMAGE = 5;
-        private static final float ENEMY_MEDIUM_RELOAD_INTERVAL = 4f;
-        private static final int ENEMY_MEDIUM_HP = 5;
+    private static final float ENEMY_MEDIUM_HEIGHT = 0.15f;
+    private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.02f;
+    private static final int ENEMY_MEDIUM_BULLET_DAMAGE = 5;
+    private static final float ENEMY_MEDIUM_RELOAD_INTERVAL = 4f;
+    private static final int ENEMY_MEDIUM_HP = 5;
     // данные для вражеского корабля Тип3
-        private static final float ENEMY_BIG_HEIGHT = 0.2f;
-        private static final float ENEMY_BIG_BULLET_HEIGHT = 0.04f;
-        private static final int ENEMY_BIG_BULLET_DAMAGE = 10;
-        private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
-        private static final int ENEMY_BIG_HP = 10;
+    private static final float ENEMY_BIG_HEIGHT = 0.2f;
+    private static final float ENEMY_BIG_BULLET_HEIGHT = 0.04f;
+    private static final int ENEMY_BIG_BULLET_DAMAGE = 10;
+    private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
+    private static final int ENEMY_BIG_HP = 10;
 
     private final Rect worldBounds;
     private final Sound bulletSound;
@@ -53,6 +53,9 @@ public class EnemyEmitter {
 
     private float generateTimer;
 
+    private int level;
+
+
     public EnemyEmitter(Rect worldBounds, Sound bulletSound, EnemyPool enemyPool, TextureAtlas atlas) {
         this.worldBounds = worldBounds;
         this.bulletSound = bulletSound;
@@ -63,7 +66,8 @@ public class EnemyEmitter {
         enemyBigRegions = ru.gb.utils.Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int frags) { // добавляем количество убитых врагов
+        level = frags/10 + 1; //единицу добавили, чтобы уровень сложности никогда не был равен 0
         generateTimer += delta;
         if (generateTimer >= GENERATE_INTERVAL) {
             generateTimer = 0f;
@@ -76,7 +80,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         enemySmallBulletV,
                         ENEMY_SMALL_BULLET_HEIGHT,
-                        ENEMY_SMALL_BULLET_DAMAGE,
+                        ENEMY_SMALL_BULLET_DAMAGE * level, //с каждым уровнем враги наносят больше урона
                         bulletSound,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HEIGHT,
@@ -89,7 +93,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         enemyMediumBulletV,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
-                        ENEMY_MEDIUM_BULLET_DAMAGE,
+                        ENEMY_MEDIUM_BULLET_DAMAGE* level,
                         bulletSound,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
@@ -102,7 +106,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         enemyBigBulletV,
                         ENEMY_BIG_BULLET_HEIGHT,
-                        ENEMY_BIG_BULLET_DAMAGE,
+                        ENEMY_BIG_BULLET_DAMAGE* level,
                         bulletSound,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
@@ -116,5 +120,9 @@ public class EnemyEmitter {
             enemy.setPos(posX, worldBounds.getTop());
         }
     }
+
+    public int getLevel() {
+        return level;
     }
+}
 
