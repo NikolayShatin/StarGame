@@ -14,10 +14,18 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions; // для анимации состоящей из нескольких текстур
     protected int frame;// указывает на текущий элемент в TextureRegion
 
+    private boolean destroyed; // флаг, помечающий спрайт на удаление
+
+    public Sprite() {
+    }
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1]; // иициализируем единичный массив
         regions[0] = region; // в который положим TextureRegion
+    }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        regions = ru.gb.utils.Regions.split(region, rows, cols, frames);
     }
 
 
@@ -39,9 +47,9 @@ public class Sprite extends Rect {
 
     //дополнительные методы спарайта, для передачи различных событий
 
-public void resize (Rect worldBounds){
+    public void resize(Rect worldBounds) {
 
-}
+    }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         return false;
@@ -77,14 +85,28 @@ public void resize (Rect worldBounds){
     // мы спрайту будем задавать только высоту, а ширина будет считаться автоматически
 
 
-    public void setHeightProportion(float height){
+    public void setHeightProportion(float height) {
         setHeight(height);
-        float aspect = regions[frame].getRegionWidth()/(float)regions[frame].getRegionHeight();
-        setWidth(height*aspect);
+        float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
+        setWidth(height * aspect);
     }
 
     public void update(float delta) {
 
+    }
+
+
+    public void destroy() { // метод, который выставляет флаг в true
+        destroyed = true;
+    }
+
+
+    public void flushDestroy() { //сбрасывает флаг для возможности переиспользования
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() { // для получения текущего состояния объекта
+        return destroyed;
     }
 
 }
