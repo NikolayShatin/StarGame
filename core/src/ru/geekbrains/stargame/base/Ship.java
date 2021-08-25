@@ -85,8 +85,12 @@ public abstract class Ship extends Sprite {
     @Override
     public void destroy() {
         super.destroy();
-        boom();
+        if(hp == 0){
+            boom();
+        }
+
     }
+
 
     private void shoot() {
         Bullet bullet = bulletPool.obtain();

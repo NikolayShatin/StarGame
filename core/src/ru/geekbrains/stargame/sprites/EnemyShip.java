@@ -28,7 +28,7 @@ public class EnemyShip extends Ship {
         } else {
             reloadTimer = reloadInterval * 0.8f;
         }
-        if (getBottom() < worldBounds.getBottom()) {// если пересечет нижнюю часть экрана
+        if (getBottom() < worldBounds.getBottom()-halfHeight*2) {// если пересечет нижнюю часть экрана
             destroy();
         }
 
