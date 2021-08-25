@@ -11,7 +11,7 @@ public class Logo extends Sprite {
 
     private Vector2 v;
     private Vector2 touch;
-    private static final float V_LEN = 0.01f;
+    private static final float V_LEN = 0.001f;
 
 
     public Logo(Texture texture) {
@@ -23,7 +23,7 @@ public class Logo extends Sprite {
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.2f);
+        setHeightProportion(0.3f);
     }
 
 

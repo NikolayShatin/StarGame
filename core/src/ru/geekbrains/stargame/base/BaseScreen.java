@@ -17,10 +17,10 @@ public class BaseScreen implements Screen, InputProcessor {// родительс
     protected SpriteBatch batch; // доступен из наследников
 
     private Rect screenBounds; // пиксельный вариант прямоугольника
-    private Rect worldBounds; // прямоугольник с мировой системой координат
+    protected Rect worldBounds; // прямоугольник с мировой системой координат
     private Rect glBounds; // прямоугольник с координатами OpenGL
 
-    private Matrix4 worldToGL; // объявим матрицу проекции
+    private Matrix4 worldToGl; // объявим матрицу проекции
     private Matrix3 screenToWorld; // для пересчета системы событий
 
     private Vector2 touch;
@@ -35,7 +35,7 @@ public class BaseScreen implements Screen, InputProcessor {// родительс
         screenBounds = new Rect();
         worldBounds = new Rect();
         glBounds = new Rect(0,0,1f,1f);
-        worldToGL = new Matrix4();
+        worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
     }
@@ -57,12 +57,10 @@ public class BaseScreen implements Screen, InputProcessor {// родительс
         float aspect = width / (float) height; // получили соотношение сторон
         worldBounds.setHeight(1f);
         worldBounds.setWidth(1f*aspect);
-        MatrixUtils.calcTransitionMatrix(worldToGL,worldBounds,glBounds);
-        batch.setProjectionMatrix(worldToGL);
+        MatrixUtils.calcTransitionMatrix(worldToGl,worldBounds,glBounds);
+        MatrixUtils.calcTransitionMatrix(screenToWorld,screenBounds,worldBounds);//пересчет для системы событий
+        batch.setProjectionMatrix(worldToGl);
         resize(worldBounds);
-
-        //пересчет для системы событий
-        MatrixUtils.calcTransitionMatrix(screenToWorld,screenBounds,worldBounds);
     }
 
 
